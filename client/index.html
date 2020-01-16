@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simple Socket.io Test Server</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+    </head>
+    <body>
+        <h1>Simple Socket.io Test Server</h1>
+        <div id="form">
+            <select id="type">
+                <option value="echo">echo</option>
+                <option value="syn">syn</option>
+                <option value="bcast">bcast</option>
+            </select>
+            <input type="text" id="msg" />
+            <input type="button" id="send" value="Send" />
+        </div>
+        <pre id="log">
+(Log is in reverse order; newest is at top)
+        </pre>
+        <hr>
+        <h2>Events:</h2>
+        <ul>
+            <li><code>echo</code>: callback response with same data as sent</li>
+            <li><code>syn</code>: sends back <code>"ack"</code> event</li>
+            <li><code>bcast</code>: broadcasts the event <code>bcasted</code> to all connected sockets with the message given</li>
+        </ul>
+        <script>
+            const log = document.querySelector('#log');
+            const socket = io();
+            socket.on('connect', () => {
+                if(socket.connected) {
+                    log.prepend("Connected\n");
+
+                    socket.on('ack', (data) => log.prepend("ack\n"));
+                    socket.on('bcasted', (data) => log.prepend("Broadcast: " + data + "\n"));
+                } else {
+                    log.prepent("Failed to connect\n");
+                }
+            });
+            document.querySelector('#send').addEventListener('click', () => {
+                if(!socket.connected) {
+                    log.prepend("Socket not connected\n");
+                    return;
+                }
+                switch(document.querySelector('#type').value) {
+                    case 'syn':
+                        socket.emit('syn');
+                        break;
+                    case 'echo':
+                        socket.emit(
+                            'echo',
+                            document.querySelector('#msg').value,
+                            (data) => log.prepend(data + "\n")
+                        );
+                        break;
+                    case 'bcast':
+                        socket.emit('bcast', document.querySelector('#msg').value);
+                        break;
+                    default:
+                        log.prepend("Unknown event\n");
+                }
+            });
+        </script>
+    </body>
+</html>

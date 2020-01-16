@@ -1,0 +1,27 @@
+{
+  "name": "socket-test-server",
+  "version": "1.0.0",
+  "description": "Simple socket.io server for testing",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ct-martin/socket-test-server.git"
+  },
+  "author": "CTMartin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ct-martin/socket-test-server/issues"
+  },
+  "homepage": "https://github.com/ct-martin/socket-test-server#readme",
+  "engines":{
+    "node": "12.x",
+    "npm": "6.x"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}
